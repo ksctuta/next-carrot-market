@@ -2,26 +2,46 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   // 다른 객체에 연결될때 그 객체가 존재하길 원함.
   previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
   // 데이터 베이스가 도움을 주지 못하는 상황에서 prisma를 통해 도움 받게 하기 위함.
   referentialIntegrity = "prisma"
 }
 
+// 필수적인부분 아닐땐 ?붙이면된다 리콰이어드 아닐때
 model User {
   // PK Unique
-  id                Int           @id @default(autoincrement())
-  // 필수적인부분 아닐땐 ?붙이면된다 리콰이어드 아닐때
-  phone             Int?          @unique
-  email             String?       @unique
-  name              String
-  avatar            String?
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  id        Int      @id @default(autoincrement())
+  phone     BigInt?     @unique
+  email     String?  @unique
+  name      String
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tokens    Token[]
+}
+
+// onDelete:Cascade 부모 레코드가 삭제 될때 자식 레코드도 삭제
+// onDelete: Cascade
+// 부모 레코드가 삭제되면 자식 레코드도 함께 삭제하도록 합니다.
+// ```
+// // 옵션
+// Cascade
+// Restrict
+// NoAction
+// SetNull
+// SetDefault
+model Token {
+  id        Int      @id @default(autoincrement())
+  payload   String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
