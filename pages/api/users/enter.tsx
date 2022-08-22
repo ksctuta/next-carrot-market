@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import withHandler, { ResponseType } from "@libs/server/withHandler";
 import client from "@libs/server/client";
 import twilio from "twilio";
-import mail from "@sendgrid/mail"
+import mail from "@sendgrid/mail";
 
 mail.setApiKey(process.env.SENDGRID_API_KEY!);
 
@@ -16,7 +16,7 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   const { phone, email } = req.body;
-  const user = phone ? { phone: +phone } : email ? { email } : null;
+  const user = phone ? { phone } : email ? { email } : null;
   if (!user) return res.json({ ok: false });
   const payload = Math.floor(100000 + Math.random() * 90000) + "";
 
@@ -54,7 +54,7 @@ async function handler(
     // console.log(message);
   }
   // 이메일 서비스
-  else if(email){
+  else if (email) {
     // const email = await mail.send({
     //   from: "ksctuta@gmail.com",
     //   // to 상대방 이메일
@@ -69,28 +69,29 @@ async function handler(
   return res.json({
     ok: true,
   });
-  // es6 기능 객체안에 if else 사용 version
-  // const user = await client.user.upsert({
-  //   where: {
-  //     // 더 줄이면 위에 payload 사용 가능
-  //     ...payload,
-  //     // 아랫 부분과 동일
-  //     // ...(phone && {phone: +phone}),
-  //     // ...(email && {email}),
-  //     // 윗 부분가 동일
-  //     // ...(phone ? { phone: +phone } : {}),
-  //     // ...(email ? { email } : {}),
-  //   },
-  //   create: {
-  //     name: "Anonymous",
-  //     ...payload,
-  //     // ...(phone ? { phone: +phone } : {}),
-  //     // ...(email ? { email } : {}),
-  //   },
-  //   update: {},
-  // });
 }
-export default withHandler("POST", handler);
+export default withHandler({ methods: ["POST"], handler, isPrivate: false });
+// es6 기능 객체안에 if else 사용 version
+// const user = await client.user.upsert({
+//   where: {
+//     // 더 줄이면 위에 payload 사용 가능
+//     ...payload,
+//     // 아랫 부분과 동일
+//     // ...(phone && {phone: +phone}),
+//     // ...(email && {email}),
+//     // 윗 부분가 동일
+//     // ...(phone ? { phone: +phone } : {}),
+//     // ...(email ? { email } : {}),
+//   },
+//   create: {
+//     name: "Anonymous",
+//     ...payload,
+//     // ...(phone ? { phone: +phone } : {}),
+//     // ...(email ? { email } : {}),
+//   },
+//   update: {},
+// });
+
 //let user;
 // 기본 응용 2번
 // if (phone) {

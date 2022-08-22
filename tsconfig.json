@@ -21,6 +21,6 @@
       "@components/*": ["components/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/items/[id]htmltsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/products/[id]htmltsx"],
   "exclude": ["node_modules"]
 }
