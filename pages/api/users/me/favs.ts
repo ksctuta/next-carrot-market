@@ -11,15 +11,26 @@ async function handler(
     const {
         session: { user },
     } = req;
-    const reviews = await client.review.findMany({
+
+    const favs = await client.fav.findMany({
         where: {
-            createdForId: user?.id,
+            userId: user?.id,
         },
-        include: { createdBy: { select: { id: true, avatar: true, name:true,} } }
+        include:{
+            product:{
+                include:{
+                    _count:{
+                        select:{
+                            favs:true,
+                        }
+                    }
+                }
+            }
+        }
     })
     res.json({
         ok: true,
-        reviews,
+        favs,
     });
 }
 
