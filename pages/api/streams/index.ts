@@ -8,46 +8,35 @@ async function handler(
     req: NextApiRequest,
     res: NextApiResponse<ResponseType>
 ) {
-    if (req.method === "GET") {
-        const products = await client.product.findMany({
-            include: {
-                // favs:true,
-                _count: {
-                    select: {
-                        favs: true
-                    }
-                }
-            }
-        })
-        res.json({
-            ok: true,
-            products,
-        })
-    }
+    const {
+        session: { user },
+        body: {
+            name, price, description,
+        }
+    } = req;
+    console.log(price);
     if (req.method === "POST") {
-        const {
-            body: { name, price, description, photoId },
-            session: { user },
-        } = req;
-        const product = await client.product.create({
+        const stream = await client.stream.create({
             data: {
                 name,
                 price: +price,
                 description,
-                image: photoId,
                 user: {
                     connect: {
                         id: user?.id,
-                    },
-                },
+                    }
+                }
             },
         });
-        res.json({
-            ok: true,
-            product,
-        });
+        res.json({ ok: true, stream })
     }
-
+    else if (req.method === "GET") {
+        const streams = await client.stream.findMany({
+            take:10,
+            skip:20,
+        });
+        res.json({ ok: true, streams });
+    }
 }
 
 export default withApiSession(

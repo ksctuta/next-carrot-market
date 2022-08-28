@@ -6,6 +6,8 @@ import useUser from "@libs/client/useUser";
 import Head from "next/head";
 import useSWR from "swr";
 import { Product } from "@prisma/client";
+import Image from "next/image";
+import picachu from "../public/profile/picachu.jpg"
 // import "@libs/server/client";
 
 export interface ProductWithCount extends Product {
@@ -58,6 +60,7 @@ const Home: NextPage = () => {
           </svg>
         </FloatingButton>
       </div>
+      {/* <Image src={picachu} placeholder="blur" quality={100}></Image> */}
     </Layout>
   );
 };

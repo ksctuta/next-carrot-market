@@ -36,48 +36,22 @@ const Streams: NextPage = () => {
   const { user } = useUser();
   const router = useRouter();
   const { data, mutate } = useSWR<StreamResponse>(
-    router.query.id ? `/api/streams/${router.query.id}` : null,
-    // 초 마다 갱신 1000 => 1sec
-    {refreshInterval:1000,}
+    router.query.id ? `/api/streams/${router.query.id}` : null
   );
   const { register, handleSubmit, reset } = useForm<MessageForm>();
   const [sendMessage, { loading, data: sendMessageData }] = useMutation(
     `/api/streams/${router.query.id}/messages`
-  );
+  );  
   const onValid = (form: MessageForm) => {
     if (loading) return;
     reset();
-    // 백앤드 데이터 패칭 기다리지않고 먼저 UI그리는 Mutate
-    mutate(
-      (prev) =>
-        prev &&
-        ({
-          ...prev,
-          stream: {
-            ...prev.stream,
-            messages: [
-              ...prev.stream.messages,
-              {
-                id: Date.now(),
-                message: form.message,
-                user: {
-                  ...user,
-                },
-              },
-            ],
-          },
-        } as any),
-      false
-    );
-    // 백앤드 데이터 패칭 실행 되는 기능
     sendMessage(form);
   };
-  // 백앤드 데이터 패칭 기다릴때 실행 되는 Mutate
-  // useEffect(() => {
-  //   if (sendMessageData && sendMessageData.ok) {
-  //     mutate();
-  //   }
-  // }, [sendMessageData, mutate]);
+  useEffect(() => {
+    if (sendMessageData && sendMessageData.ok) {
+      mutate();
+    }
+  }, [sendMessageData, mutate]);
   return (
     <Layout canGoBack>
       <div className="py-10 px-4  space-y-4">

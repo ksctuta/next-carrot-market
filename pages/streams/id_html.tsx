@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 
-const Stream_Html: NextPage = () => {
+const LiveDetail_Html: NextPage = () => {
   return (
     <div>
       <div/>
@@ -123,4 +123,4 @@ const Stream_Html: NextPage = () => {
   );
 };
 
-export default Stream_Html;
+export default LiveDetail_Html;

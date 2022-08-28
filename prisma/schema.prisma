@@ -35,6 +35,8 @@ model User {
   sales           Sale[]
   purchases       Purchase[]
   record          Record[]
+  streams         Stream[]
+  messages        Message[]
 }
 
 // onDelete:Cascade 부모 레코드가 삭제 될때 자식 레코드도 삭제
@@ -163,4 +165,27 @@ enum Kind {
   Purchase
   Sale
   Fav
+}
+
+model Stream {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String    @db.MediumText
+  price       Int
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  messages    Message[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  message   String   @db.MediumText
+  stream    Stream   @relation(fields: [streamId], references: [id], onDelete: Cascade)
+  streamId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
