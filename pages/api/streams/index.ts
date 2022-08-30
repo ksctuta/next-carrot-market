@@ -21,7 +21,7 @@ async function handler(
             result: {
                 uid,
                 rtmps: { streamKey, url },
-              },
+            },
         } = await (await fetch(
             `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUD_FLARE_ACCOUNT_ID}/stream/live_inputs`,
             {
@@ -33,9 +33,9 @@ async function handler(
             }
         )
         ).json();
-        console.log(uid);
-        console.log(url);
-        console.log(streamKey);
+        // console.log(uid);
+        // console.log(url);
+        // console.log(streamKey);
         //console.log();
         const stream = await client.stream.create({
             data: {
@@ -55,10 +55,11 @@ async function handler(
         res.json({ ok: true, stream })
     }
     else if (req.method === "GET") {
-        const streams = await client.stream.findMany({
-            take: 10,
-            skip: 20,
-        });
+        // const streams = await client.stream.findMany({
+        //     take: 10,
+        //     skip: 20,
+        // });
+        const streams = await client.stream.findMany({});
         res.json({ ok: true, streams });
     }
 }
