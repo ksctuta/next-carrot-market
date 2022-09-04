@@ -10,16 +10,20 @@ import { cls } from "@libs/client/utils";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 
+//@ts-ignore
 interface AnswerWithUser extends Answer {
+  //@ts-ignore
   user: User;
 }
 
+//@ts-ignore
 interface PostWithUser extends Post {
   user: User;
   _count: {
     answers: number;
     wondering: number;
   };
+  //@ts-ignore
   answers: AnswerWithUser[];
 }
 
@@ -161,7 +165,7 @@ const CommunityPostDetail: NextPage = () => {
                   {answer.user.name}
                 </span>
                 <span className="text-xs text-gray-500 block ">
-                  {answer.createdAt}
+                  {/* {answer.createdAt} */}
                 </span>
                 <p className="text-gray-700 mt-2">{answer.answer}</p>
               </div>

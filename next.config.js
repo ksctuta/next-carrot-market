@@ -5,7 +5,7 @@ const nextConfig = {
   swcMinify: true,
   images: {
     // next js config 이미지 도메인 추가
-    domains: ["imagedelivery.net","videodelivery.net"],
+    domains: ["imagedelivery.net", "videodelivery.net"],
   },
 };
 

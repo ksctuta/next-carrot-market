@@ -17,7 +17,7 @@ export default function Forms() {
   const {
     register,
     watch,
-    handleSubmit,
+    handleSubmit,    
     formState: { errors },
     setValue,
     setError,
@@ -94,7 +94,7 @@ export default function Forms() {
       <br></br>
       <input type="submit" value="Create Account" />
       <br></br>
-      {errors.errors?.message}
+      {errors?.error?.message}
     </form>
   );
 }

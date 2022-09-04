@@ -1,13 +1,15 @@
+/* eslint-disable @next/next/no-typos */
 import type { NextPage } from "next";
 import FloatingButton from "@components/floating-button";
 import Item from "@components/item";
 import Layout from "@components/layout";
 import useUser from "@libs/client/useUser";
 import Head from "next/head";
-import useSWR from "swr";
+import useSWR, { SWRConfig } from "swr";
 import { Product } from "@prisma/client";
 import Image from "next/image";
-import picachu from "../public/profile/picachu.jpg"
+import picachu from "../public/profile/picachu.jpg";
+import client from "@libs/server/client";
 // import "@libs/server/client";
 
 export interface ProductWithCount extends Product {
@@ -21,27 +23,37 @@ interface productResponse {
   products: ProductWithCount[];
 }
 
+// const Home: NextPage<{ products: ProductWithCount[] }> = ({ products }) => {
 const Home: NextPage = () => {
   const { user, isLoading } = useUser();
   const { data } = useSWR<productResponse>("/api/products");
-  console.log(data);
-  //console.log(user);
   return (
-    <Layout title="홈" hasTabBar>
-      <Head>
-        <title>Home</title>
-      </Head>
+    <Layout title="홈" hasTabBar seoTitle="Home">
       <div className="flex flex-col space-y-5 divide-y">
-        {data?.products?.map((product, i) => (
+        {data
+          ? data?.products?.map((product, i) => (
+              <Item
+                id={product.id}
+                key={product.id}
+                title={product.name}
+                price={product.price}
+                comments={1}
+                hearts={product._count?.favs || 0}
+                image={product.image}
+              />
+            ))
+          : "Loading..."}
+        {/* {products?.map((product, i) => (
           <Item
             id={product.id}
             key={product.id}
             title={product.name}
             price={product.price}
             comments={1}
-            hearts={product._count.favs}
+            hearts={product._count?.favs || 0}
+            image={product.image}
           />
-        ))}
+        ))} */}
         <FloatingButton href="/products/upload">
           <svg
             className="h-6 w-6"
@@ -65,4 +77,32 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+const Page: NextPage<{ products: ProductWithCount[] }> = ({ products }) => {
+  return (
+    <SWRConfig
+      value={{
+        fallback: {
+          "/api/products": {
+            ok: true,
+            products,
+          },
+        },
+      }}
+    >
+      <Home />
+    </SWRConfig>
+  );
+};
+export async function getServerSideProps() {
+  console.log("SSR")
+  const products = await client.product.findMany({});
+  //await new Promise(resolve => setTimeout(resolve, 1000))
+  console.log(products);
+  return {
+    props: {
+      products: JSON.parse(JSON.stringify(products)),
+    },
+  };
+}
+
+export default Page;

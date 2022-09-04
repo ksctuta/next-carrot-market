@@ -1,11 +1,41 @@
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from "@components/button";
 import Input from "@components/input";
 import useMutation from "@libs/client/useMutation";
 import { cls } from "@libs/client/utils";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+// normal import
+// import Bs from "@components/bs";
+
+// dynamic import
+// const Bs = dynamic(() => import("@components/bs"), { ssr: false });
+
+// One Lazy-load import : dynamic import (ex: 5 secend donwload)
+// const Bs = dynamic(
+//   //@ts-ignore
+//   () =>
+//     new Promise((resolve) =>
+//       setTimeout(() => resolve(import("@components/bs")), 5000)
+//     ),
+//   { ssr: false, loading: () => <span>Loading a big component 4 u bby.</span> }
+// );
+
+// Two Lazy-load import : React 18 Version Suspense Use
+
+const Bs = dynamic(
+  //@ts-ignore
+  () =>
+    new Promise((resolve) =>
+      setTimeout(() => resolve(import("@components/bs")), 5000)
+    ),
+  { ssr: false, suspense: true }
+);
+//const Bs = dynamic(() => import("@components/bs"), { ssr: false, suspense: true });
 
 interface EnterForm {
   email?: string;
@@ -65,15 +95,14 @@ const Enter: NextPage = () => {
 
   const router = useRouter();
   useEffect(() => {
-    if(tokenData?.ok){
+    if (tokenData?.ok) {
       router.push("/");
     }
-  }, [tokenData, router])
-  
+  }, [tokenData, router]);
 
   const onTokenInValid = () => {};
   // console.log(watch());
-  console.log(data);
+  // console.log(data);
   return (
     <div className="mt-16 px-4">
       <h3 className="text-3xl font-bold text-center">Enter to Carrot</h3>
@@ -142,16 +171,28 @@ const Enter: NextPage = () => {
                 />
               ) : null}
               {method === "phone" ? (
-                <Input
-                  name="phone"
-                  label="Phone number"
-                  type="number"
-                  kind="phone"
-                  required
-                  register={register("phone", {
-                    required: true,
-                  })}
-                />
+                <>
+                  {/* <Bs hello={true} /> */}
+                  <Suspense
+                    fallback={
+                      <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                        <Skeleton height={24} />
+                      </SkeletonTheme>
+                    }
+                  >
+                    <Bs />
+                  </Suspense>
+                  <Input
+                    name="phone"
+                    label="Phone number"
+                    type="number"
+                    kind="phone"
+                    required
+                    register={register("phone", {
+                      required: true,
+                    })}
+                  />
+                </>
               ) : null}
               {method === "email" ? (
                 <Button text={loading ? "Loading" : "Get login link"} />
