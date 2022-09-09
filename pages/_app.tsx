@@ -11,8 +11,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       value={{
         // 2초마다
         // refreshInterval:2000,
-        fetcher: (url: string) =>
-          fetch(url).then((response) => response.json()),
+        // fetcher: (url: string) =>
+        //   fetch(url).then((response) => response.json()),
       }}
     >
       <div className="w-full max-w-xl mx-auto">
