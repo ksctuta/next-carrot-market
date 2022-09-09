@@ -11,7 +11,7 @@ interface ProfileResponse {
 //const fetcher = (url: string) => fetch(url).then((response) => response.json());
 export default function useUser() {
   // swr super key
-  const { data, error } = useSWR<ProfileResponse>("/api/users/me");
+  const { data, error } = useSWR<ProfileResponse>(typeof window === "undefined" ? null : "/api/users/me");
   const router = useRouter();
 
   useEffect(() => {
