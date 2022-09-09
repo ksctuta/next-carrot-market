@@ -2,6 +2,7 @@
 import { NextRequest, NextFetchEvent, NextResponse, userAgent } from 'next/server'
 
 export function middleware(request: NextRequest, ev: NextFetchEvent) {
+    
     //console.log("global middleware")
     const { isBot } = userAgent(request);
     //console.log(isBot)

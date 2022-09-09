@@ -187,6 +187,7 @@ const Profile: NextPage = () => {
   );
 };
 
+// ssuspanse 사용 안할 때
 const Page: NextPage<{ profile: any }> = ({ profile }) => {
   return (
     <SWRConfig
@@ -201,6 +202,7 @@ const Page: NextPage<{ profile: any }> = ({ profile }) => {
   );
 };
 
+// ssuspanse 사용 안할 때
 //export async function getServerSideProps(ctx:NextPageContext) {
 export const getServerSideProps = withSsrSession(async function (
   //ctx: NextPageContext

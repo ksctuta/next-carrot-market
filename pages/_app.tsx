@@ -18,11 +18,19 @@ function MyApp({ Component, pageProps }: AppProps) {
       <div className="w-full max-w-xl mx-auto">
         <Component {...pageProps} />
       </div>
-      {/* <Script
+    </SWRConfig>
+  );
+}
+export default MyApp;
+
+{
+  /* <Script
         src="https://developers.kakao.com/sdk/js/kakao.js"
         strategy="lazyOnload"
-      /> */}
-      {/* <Script
+      /> */
+}
+{
+  /* <Script
         src="https://connect.facebook.net/en_US/sdk.js"
         onLoad={() => {
           //@ts-ignore
@@ -37,8 +45,5 @@ function MyApp({ Component, pageProps }: AppProps) {
             });
           };
         }}
-      ></Script> */}
-    </SWRConfig>
-  );
+      ></Script> */
 }
-export default MyApp;
